@@ -42,10 +42,9 @@ The script will also calculate the hashes as well as the estimated cost of the r
 [+] SHA1: 5d77804b87735e66d7d1e263c31c4ef010f16153
 [+] SHA256: 9c2c8a8588fe6db09c09337e78437cb056cd557db1bcf5240112cbfb7b600efb
 [+] Imphash: 8eeaa9499666119d13b3f44ecd77a729
-[!] Estimated cost of requests: $0.0693
 ```
 
-The result can be visualize in a table. Below is a truncated extract.
+The result can be visualised in a table. Below is a truncated extract.
 
 ```
 +------------------------------------------+-----------------------------+------------------------------------------+
@@ -160,7 +159,7 @@ This version replaces the OpenAI GPT-3 backend with the Anthropic Claude API. He
 
 **API client:** Replaced the `openai` package with `anthropic`. Install with `pip install anthropic`.
 
-**Client initialization:** The Anthropic SDK uses `anthropic.Anthropic(api_key=...)` rather than setting a module-level `openai.api_key`.
+**Client initialisation:** The Anthropic SDK uses `anthropic.Anthropic(api_key=...)` rather than setting a module-level `openai.api_key`.
 
 **API call structure:** Switched from `openai.Completion.create()` to `client.messages.create()`. The Anthropic API uses a `messages` list with role/content pairs rather than a raw `prompt` string.
 
@@ -171,7 +170,7 @@ This version replaces the OpenAI GPT-3 backend with the Anthropic Claude API. He
 **Cost estimation removed:** The original hardcoded an OpenAI price-per-token estimate. Since Anthropic pricing varies by model, this line has been removed. Refer to the [pricing page](https://docs.anthropic.com/en/docs/about-claude/pricing) and the table above for current rates.
 
 # Limitations
-The cost of using Claude to analyze the imported Windows APIs in a PE file can vary depending on the size of the IAT. While the cost of individual requests is not expensive, the total cost can quickly add up for larger files. The estimated cost provided by the script is an approximation and may vary.
+The cost of using Claude to analyse the imported Windows APIs in a PE file can vary depending on the size of the IAT. While the cost of individual requests is not expensive, the total cost can quickly add up for larger files.
 
 Due to the design of the script, the analysis is performed one API at a time, which can make the process slow. A progress bar is displayed to show the progress of the analysis.
 
