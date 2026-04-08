@@ -177,7 +177,7 @@ Due to the design of the script, the analysis is performed one API at a time, wh
 
 It is important to note that Claude is a language model, so the results may not always be accurate. Additionally, the script provides details about related MITRE ATT&CK techniques without any context, so the information should be carefully considered by a malware analyst.
 
-# Build with
+# Built with
 
 - [Anthropic Claude](https://www.anthropic.com/) (originally OpenAI GPT-3)
 - [Pefile](https://github.com/erocarrera/pefile)
