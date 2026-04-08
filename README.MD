@@ -8,6 +8,7 @@ It also displays the hashes of the file. IATelligence is a proof of concept for 
 The request can take longer depending of the size of the IAT. 
 
 
+
 # Getting Started
 
 ## Prerequisites
@@ -30,113 +31,165 @@ pip install -r requirements.txt
 To run the tool just simply specify a PE file as argument to the script. 
 
 ```
-python iatelligence.py sample.exe
+python iatelligencebedrock.py C:\Windows\System32\calc.exe
 ```
 
-The script will also calculate the hashes as well as the estimated cost of the request. 
+The script will also calculate the hashes.
 
 ```
-[+] IAT Request from the file: .\sample.exe
+[+] IAT Request from the file: C:\Windows\System32\calc.exe
 [+] 33 functions will be requested to Claude!
-[+] MD5: 2f82623f9523c0d167862cad0eff6806
-[+] SHA1: 5d77804b87735e66d7d1e263c31c4ef010f16153
-[+] SHA256: 9c2c8a8588fe6db09c09337e78437cb056cd557db1bcf5240112cbfb7b600efb
+[+] MD5: 5da8c98136d98dfec4716edd79c7145f
+[+] SHA1: ed13af4a0a754b8daee4929134d2ff15ebe053cd
+[+] SHA256: 58189cbd4e6dc0c7d8e66b6a6f75652fc9f4afc7ce0eba7d67d8c3feb0d5381f
 [+] Imphash: 8eeaa9499666119d13b3f44ecd77a729
 ```
 
-The result can be visualised in a table. Below is a truncated extract.
+The result can be visualised in a table. This is a shortened version.
 
 ```
 +------------------------------------------+-----------------------------+------------------------------------------+
-| Libraries                                | API                         | Claude Verdict                              |
+| Libraries                                | API                         | Claude Verdict                           |
 +------------------------------------------+-----------------------------+------------------------------------------+
-| SHELL32.dll                              | ShellExecuteW               | The purpose of this API, ShellExecuteW,  |
-|                                          |                             | is to launch an application or open a    |
-|                                          |                             | file in the Windows operating system. It |
-|                                          |                             | is associated with MITRE ATT&CK          |
-|                                          |                             | technique T1218 - Execution Through      |
-|                                          |                             | Module Load. This technique involves     |
-|                                          |                             | using shell32.dll to execute malicious   |
-|                                          |                             | code without directly invoking the       |
-|                                          |                             | executable file itself, which can help   |
-|                                          |                             | attackers evade detection and gain       |
-|                                          |                             | access to systems.                       |
+| SHELL32.dll                              | ShellExecuteW               | ## ShellExecuteW Analysis                |
 |                                          |                             |                                          |
-| KERNEL32.dll                             | GetCurrentThreadId          | The purpose of this API is to retrieve   |
-|                                          |                             | the identifier of the calling thread. It |
-|                                          |                             | is associated with MITRE ATT&CK          |
-|                                          |                             | technique T1155 - Thread Execution,      |
-|                                          |                             | which involves creating and running      |
-|                                          |                             | threads within a process or code         |
-|                                          |                             | injection into an existing thread. The   |
-|                                          |                             | GetCurrentThreadId() function allows     |
-|                                          |                             | attackers to identify and target         |
-|                                          |                             | specific threads for malicious           |
-|                                          |                             | activities.                              |
+|                                          |                             | ### Purpose                              |
+|                                          |                             | `ShellExecuteW` (Unicode version) opens, |
+|                                          |                             | runs, or performs an action on a         |
+|                                          |                             | specified file/application. It can       |
+|                                          |                             | launch executables, open documents,      |
+|                                          |                             | URLs, or invoke shell verbs (e.g.,       |
+|                                          |                             | `open`, `runas`, `print`).               |
 |                                          |                             |                                          |
-| KERNEL32.dll                             | GetSystemTimeAsFileTime     | The purpose of this API is to retrieve   |
-|                                          |                             | the current system time as a file time   |
-|                                          |                             | format. It is associated with the MITRE  |
-|                                          |                             | ATT&CK technique T1124 - System Time     |
-|                                          |                             | Discovery, which is used by adversaries  |
-|                                          |                             | to gain insight into when certain        |
-|                                          |                             | activities occurred or are scheduled to  |
-|                                          |                             | occur. This allows them to perform       |
-|                                          |                             | timing-based attacks and evade           |
-|                                          |                             | detection.                               |
+|                                          |                             | ---                                      |
 |                                          |                             |                                          |
-| KERNEL32.dll                             | GetTickCount                | The purpose of this API is to retrieve   |
-|                                          |                             | the number of milliseconds since Windows |
-|                                          |                             | was started. It is associated with MITRE |
-|                                          |                             | ATT&CK technique T1082 - System Time     |
-|                                          |                             | Discovery, which involves an adversary   |
-|                                          |                             | querying system information to gain      |
-|                                          |                             | insight into file and system times or to |
-|                                          |                             | determine valid accounts. This can be    |
-|                                          |                             | used for various malicious activities    |
-|                                          |                             | such as enumeration, credential dumping, |
-|                                          |                             | and lateral movement.                    |
+|                                          |                             | ### MITRE ATT&CK Association             |
 |                                          |                             |                                          |
-| KERNEL32.dll                             | RtlCaptureContext           | The purpose of this API is to capture    |
-|                                          |                             | the Context Record of a thread in order  |
-|                                          |                             | to provide information about its state.  |
-|                                          |                             | This can be used for debugging, logging  |
-|                                          |                             | or other purposes. The associated MITRE  |
-|                                          |                             | ATT&CK technique is T1113 - Process      |
-|                                          |                             | Injection, as this API can be used to    |
-|                                          |                             | inject code into a running process.      |
+|                                          |                             | | Detail | Value |                       |
+|                                          |                             | |--------|-------|                       |
+|                                          |                             | | **Technique** | T1059 – Command and    |
+|                                          |                             | Scripting Interpreter |                  |
+|                                          |                             | | **Also relevant** | T1106 – Native API |
+|                                          |                             | |                                        |
+|                                          |                             | | **Sub-technique context** | T1218 –    |
+|                                          |                             | System Binary Proxy Execution (if        |
+|                                          |                             | abused) |                                |
 |                                          |                             |                                          |
-| KERNEL32.dll                             | GetCurrentProcessId         | The purpose of this API is to retrieve   |
-|                                          |                             | the current process identifier (PID) for |
-|                                          |                             | a process running on Windows. This can   |
-|                                          |                             | be used to identify which processes are  |
-|                                          |                             | currently active and running on a        |
-|                                          |                             | system. It is associated with MITRE      |
-|                                          |                             | ATT&CK technique T1057 - Process         |
-|                                          |                             | Discovery, as it allows an adversary to  |
-|                                          |                             | gain knowledge about the processes that  |
-|                                          |                             | are running on a system.                 |
+|                                          |                             | ---                                      |
 |                                          |                             |                                          |
-| KERNEL32.dll                             | RtlVirtualUnwind            | The purpose of this API is to provide an |
-|                                          |                             | unwinding mechanism that can be used to  |
-|                                          |                             | traverse the stack frames of a program.  |
-|                                          |                             | It is associated with the MITRE ATT&CK   |
-|                                          |                             | technique called "Stack Walking"         |
-|                                          |                             | (T1063). This technique involves using   |
-|                                          |                             | APIs like RtlVirtualUnwind() to walk     |
-|                                          |                             | through the stack frames, which can help |
-|                                          |                             | attackers gain access to sensitive       |
-|                                          |                             | information or bypass security controls. |
+|                                          |                             | ### Why It's Associated                  |
+|                                          |                             | - Adversaries abuse `ShellExecuteW` to   |
+|                                          |                             | **spawn processes, execute payloads, or  |
+|                                          |                             | elevate privileges** (`runas` verb for   |
+|                                          |                             | UAC bypass → **T1548.002**)              |
+|                                          |                             | - Commonly used in malware to **launch   |
+|                                          |                             | child processes indirectly**, evading    |
+|                                          |                             | simple process-creation monitoring       |
+|                                          |                             | - Can execute files from **suspicious    |
+|                                          |                             | paths or URLs**, supporting              |
+|                                          |                             | delivery/execution stages                |
+|                                          |                             | - Often observed in **droppers, loaders, |
+|                                          |                             | and living-off-the-land** techniques     |
+|                                          |                             | since it blends with legitimate activity |
 |                                          |                             |                                          |
-| KERNEL32.dll                             | UnhandledExceptionFilter    | The purpose of this API is to provide an |
-|                                          |                             | exception handler for unhandled          |
-|                                          |                             | exceptions in the Windows operating      |
-|                                          |                             | system. It is associated with the MITRE  |
-|                                          |                             | ATT&CK technique T1136 - Create or       |
-|                                          |                             | Modify System Process, as it allows a    |
-|                                          |                             | program to be able to handle unexpected  |
-|                                          |                             | events that may occur during its         |
-|                                          |                             | execution.                               |
+| KERNEL32.dll                             | GetCurrentThreadId          | ## GetCurrentThreadId                    |
+|                                          |                             |                                          |
+|                                          |                             | ### Purpose                              |
+|                                          |                             | Returns the **thread ID of the calling   |
+|                                          |                             | thread**. Used for thread                |
+|                                          |                             | identification, logging,                 |
+|                                          |                             | synchronization, and debugging within a  |
+|                                          |                             | process.                                 |
+|                                          |                             |                                          |
+|                                          |                             | ---                                      |
+|                                          |                             |                                          |
+|                                          |                             | ### MITRE ATT&CK Association             |
+|                                          |                             | **Weakly associated** with:              |
+|                                          |                             | - **T1055 – Process Injection**: Malware |
+|                                          |                             | commonly calls `GetCurrentThreadId`      |
+|                                          |                             | during injection routines to             |
+|                                          |                             | identify/avoid injecting into its own    |
+|                                          |                             | thread, or to manage thread-level        |
+|                                          |                             | operations during shellcode execution.   |
+|                                          |                             | - **T1106 – Native API**: General use of |
+|                                          |                             | Windows APIs to execute malicious        |
+|                                          |                             | behavior.                                |
+|                                          |                             |                                          |
+|                                          |                             | ---                                      |
+|                                          |                             |                                          |
+|                                          |                             | ### Why                                  |
+|                                          |                             | On its own, `GetCurrentThreadId` is      |
+|                                          |                             | **benign and extremely common**. It      |
+|                                          |                             | becomes relevant in malicious context    |
+|                                          |                             | when observed alongside APIs like        |
+|                                          |                             | `CreateRemoteThread`,                    |
+|                                          |                             | `NtQueueApcThread`, or `SuspendThread`,  |
+|                                          |                             | where thread awareness is needed for     |
+|                                          |                             | **evasion or injection logic**.          |
+|                                          |                             |                                          |
+| KERNEL32.dll                             | GetSystemTimeAsFileTime     | ## GetSystemTimeAsFileTime               |
+|                                          |                             |                                          |
+|                                          |                             | ### Purpose                              |
+|                                          |                             | Retrieves the **current system date and  |
+|                                          |                             | time in UTC**, expressed in **FILETIME   |
+|                                          |                             | format** (a 64-bit value representing    |
+|                                          |                             | the number of 100-nanosecond intervals   |
+|                                          |                             | since January 1, 1601).                  |
+|                                          |                             |                                          |
+|                                          |                             | ---                                      |
+|                                          |                             |                                          |
+|                                          |                             | ### MITRE ATT&CK Association             |
+|                                          |                             | **T1124 – System Time Discovery**        |
+|                                          |                             |                                          |
+|                                          |                             | ---                                      |
+|                                          |                             |                                          |
+|                                          |                             | ### Why                                  |
+|                                          |                             | Malware commonly uses this API to:       |
+|                                          |                             | - **Fingerprint execution environment**  |
+|                                          |                             | (detect sandboxes via time checks)       |
+|                                          |                             | - **Implement time-based logic**         |
+|                                          |                             | (delayed execution/detonation)           |
+|                                          |                             | - **Anti-analysis**: Sandboxes often     |
+|                                          |                             | accelerate time; comparing timestamps    |
+|                                          |                             | can reveal this                          |
+|                                          |                             | - **Timestomping preparation** or        |
+|                                          |                             | logging activity timestamps              |
+|                                          |                             |                                          |
+|                                          |                             | It is a low-suspicion, commonly abused   |
+|                                          |                             | API that blends in with legitimate       |
+|                                          |                             | software behaviour.                      |
+|                                          |                             |                                          |
+| KERNEL32.dll                             | GetTickCount                | ## GetTickCount – Purpose & MITRE ATT&CK |
+|                                          |                             |                                          |
+|                                          |                             | ### Purpose                              |
+|                                          |                             | Returns the number of **milliseconds     |
+|                                          |                             | elapsed since system boot**. It          |
+|                                          |                             | retrieves the current value of the       |
+|                                          |                             | system timer (low-resolution timestamp). |
+|                                          |                             |                                          |
+|                                          |                             | ---                                      |
+|                                          |                             |                                          |
+|                                          |                             | ### MITRE ATT&CK Association             |
+|                                          |                             | **T1497.003 – Virtualization/Sandbox     |
+|                                          |                             | Evasion: Time Based Evasion**            |
+|                                          |                             |                                          |
+|                                          |                             | ### Why                                  |
+|                                          |                             | Malware uses `GetTickCount` to **detect  |
+|                                          |                             | sandbox/analysis environments** by:      |
+|                                          |                             | - Checking if too little time has passed |
+|                                          |                             | (sandboxes often fast-forward execution) |
+|                                          |                             | - Measuring time **before/after** a      |
+|                                          |                             | sleep call (`Sleep()`) to detect if the  |
+|                                          |                             | sandbox accelerated time                 |
+|                                          |                             | - If the delta is abnormally small,      |
+|                                          |                             | malware concludes it's being analyzed    |
+|                                          |                             | and **halts or alters malicious          |
+|                                          |                             | behaviour**                              |
+|                                          |                             |                                          |
+|                                          |                             | This is a classic **anti-analysis**      |
+|                                          |                             | technique used to evade automated        |
+|                                          |                             | dynamic analysis environments.           |
+|                                          |                             |                                          |
 ```
 
 ## API Access & Cost
