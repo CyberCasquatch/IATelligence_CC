@@ -292,8 +292,10 @@ It is important to note that Claude is a language model, so the results may not 
 # Built with
 
 - [Anthropic Claude](https://www.anthropic.com/) (originally OpenAI GPT-3)
+- [AWS Bedrock](https://aws.amazon.com/bedrock/) (alternative API backend)
 - [Pefile](https://github.com/erocarrera/pefile)
 - [PrettyTable](https://github.com/jazzband/prettytable)
+- [boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html) (Bedrock version)
 
 # ORIGINAL AUTHOR
 
