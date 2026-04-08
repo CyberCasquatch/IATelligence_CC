@@ -7,7 +7,7 @@ It also displays the hashes of the file. IATelligence is a proof of concept for 
 
 The request can take longer depending of the size of the IAT. 
 
-
+[loadingcalc.png]
 
 # Getting Started
 
@@ -205,6 +205,66 @@ The Claude API is a **pay-as-you-go** service billed per token (roughly 1 token 
 This script uses **Claude Sonnet 4.6** by default. For a typical PE file with 50–100 imported functions, the total cost per run is usually just a few cents. You can switch to Haiku for cheaper, faster results, or Opus for the most thorough analysis.
 
 For the most up-to-date pricing, see the [Anthropic pricing page](https://docs.anthropic.com/en/docs/about-claude/pricing).
+
+## Alternative: AWS Bedrock
+
+If you have trouble with Anthropic's direct billing (for example, Australian users may encounter GST/ABN requirements), you can run the script through **AWS Bedrock** instead. Bedrock provides access to the same Claude models via your AWS account, which handles regional billing automatically.
+
+A separate script `iatelligencebedrock.py` is included for this purpose.
+
+### Bedrock Prerequisites
+
+1. An [AWS account](https://aws.amazon.com)
+2. Claude Sonnet 4.6 enabled under **Bedrock → Model access** in the AWS Console
+3. An AWS Access Key ID and Secret Access Key from **AWS Console → Account → Security credentials → Access keys**
+
+### Bedrock Setup Notes
+
+- **Model ID:** Claude Sonnet 4.6 on Bedrock uses `anthropic.claude-sonnet-4-6`
+
+- **Inference type:** The model uses cross-region inference, so you must prefix the model ID with your region prefix (`us.` or `ap.`) when invoking it:
+
+  ```
+  us.anthropic.claude-sonnet-4-6
+  ```
+
+- **Region:** Keep `region_name="us-east-1"` in the script regardless of where your AWS account is based — cross-region inference routes through US East
+
+- **Model access:** If the Bedrock console shows an "Open in playground" button rather than a "Request access" button, access is already granted
+
+### Bedrock Requirements
+
+Replace `requirements.txt` with:
+
+```
+boto3
+pefile
+tqdm
+prettytable
+```
+
+### Bedrock Usage
+
+Add your AWS credentials to the script:
+
+```python
+bedrock = boto3.client(
+    service_name="bedrock-runtime",
+    region_name="us-east-1",
+    aws_access_key_id="YOUR_ACCESS_KEY_ID",
+    aws_secret_access_key="YOUR_SECRET_ACCESS_KEY"
+)
+```
+
+Then run identically to the standard version:
+
+```
+python iatelligencebedrock.py C:\Windows\System32\calc.exe
+```
+
+### Bedrock Cost
+
+Pricing through Bedrock is the same per-token rate as the direct Anthropic API. A typical test run against `calc.exe` (~33 functions) costs approximately **$0.05 USD**. A larger file like `notepad.exe` (~259 functions) costs roughly **$0.82 USD**.
 
 # Key Changes from the Original
 
