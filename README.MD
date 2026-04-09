@@ -7,7 +7,7 @@ It also displays the hashes of the file. IATelligence is a proof of concept for 
 
 The request can take longer depending of the size of the IAT. 
 
-[loadingcalc.png]
+![loadingcalc.png](loadingcalc.png)
 
 # Getting Started
 
